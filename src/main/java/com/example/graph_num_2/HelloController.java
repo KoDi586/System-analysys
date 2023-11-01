@@ -15,21 +15,23 @@ import java.io.IOException;
 import java.util.List;
 
 public class HelloController {
+
     @FXML
-    private Label welcomeText;
+    private LineChart<Number, Number> lineChart1;
     @FXML
-    private Canvas canvas;
+    private LineChart<Number, Number> lineChart2;
     @FXML
-    private LineChart<Number, Number> lineChart;
+    private NumberAxis xAxis1;
     @FXML
-    private NumberAxis xAxis;
+    private NumberAxis yAxis1;
     @FXML
-    private NumberAxis yAxis;
+    private NumberAxis xAxis2;
+    @FXML
+    private NumberAxis yAxis2;
     @FXML
     private VBox container;
 
     public void initialize() {
-
         // Генерируйте массивы точек в ServiceTwo и передавайте их контроллеру
         List<List<Double>> doubless;
         try {
@@ -41,13 +43,19 @@ public class HelloController {
         List<Double> am1Points = doubless.get(0);
         List<Double> am2Points = doubless.get(1);
 
-        // Определите оси X и Y для графика
-        xAxis = new NumberAxis();
-        yAxis = new NumberAxis();
+        // Определите оси X и Y для графиков
+        xAxis1 = new NumberAxis();
+        yAxis1 = new NumberAxis();
 
-        // Создайте экземпляр LineChart
-        lineChart = new LineChart<>(xAxis, yAxis);
-        lineChart.setTitle("График");
+        xAxis2 = new NumberAxis();
+        yAxis2 = new NumberAxis();
+
+        // Создайте экземпляры LineChart для каждой плоскости
+        lineChart1 = new LineChart<>(xAxis1, yAxis1);
+        lineChart1.setTitle("График am1");
+
+        lineChart2 = new LineChart<>(xAxis2, yAxis2);
+        lineChart2.setTitle("График am2");
 
         // Создайте серии данных для am1 и am2
         XYChart.Series<Number, Number> am1Series = new XYChart.Series<>();
@@ -61,19 +69,12 @@ public class HelloController {
         am1Series.setName("am1");
         am2Series.setName("am2");
 
-        // Добавьте серии данных к графику
-        lineChart.getData().addAll(am1Series, am2Series);
+        // Добавьте серии данных к графикам
+        lineChart1.getData().addAll(am1Series);
+        lineChart2.getData().addAll(am2Series);
 
-        // Добавьте график на холст
-        container.getChildren().add(lineChart);
+        // Добавьте графики на холст
+        container.getChildren().add(lineChart1);
+        container.getChildren().add(lineChart2);
     }
-
-
-//    public void setAm1Points(List<Double> am1Points) {
-//        this.am1Points = am1Points;
-//    }
-//
-//    public void setAm2Points(List<Double> am2Points) {
-//        this.am2Points = am2Points;
-//    }
 }
