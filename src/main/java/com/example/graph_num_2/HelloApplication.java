@@ -1,5 +1,6 @@
 package com.example.graph_num_2;
 
+import fromPershinThird.ServiceTwo;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +14,12 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
         stage.setTitle("Hello!");
+
+        HelloController helloController = fxmlLoader.getController();
+        ServiceTwo.main(new String[0]);
+        helloController.setAm1Points(ServiceTwo.getAm1Points());
+        helloController.setAm2Points(ServiceTwo.getAm2Points());
+
         stage.setScene(scene);
         stage.show();
     }
