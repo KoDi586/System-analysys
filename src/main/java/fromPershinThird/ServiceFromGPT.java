@@ -122,7 +122,7 @@ public class ServiceFromGPT {
         // Временные циклы
         time = 0;
         iv = 50;
-        tau = 10;
+        tau = 100;
         dtau = 1;
 
         // Гидролитосферные процессы
