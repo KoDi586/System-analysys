@@ -122,7 +122,7 @@ public class ServiceFromGPT {
         // Временные циклы
         time = 0;
         iv = 50;
-        tau = 4000;
+        tau = 10;
         dtau = 1;
 
         // Гидролитосферные процессы
@@ -183,10 +183,18 @@ public class ServiceFromGPT {
                 }
             }
             // Сохранение точек для построения графика
+
+            am1 = (T2[Xs1][Ys1][5] - TK[Xs1][Ys1][5]) / Q1;
+            am2 = T2[Xs1][Ys1][5] - TK[Xs1][Ys1][5];
+
             am1Points.add(am1);
             am2Points.add(am2);
+
         }
         List<List<Double>> result = new ArrayList<>();
+
+        //почистить от лишнего
+
         result.add(am1Points);
         result.add(am2Points);
 

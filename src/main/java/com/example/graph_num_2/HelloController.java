@@ -28,10 +28,8 @@ public class HelloController {
     @FXML
     private VBox container;
 
-    private List<Double> am1Points;
-    private List<Double> am2Points;
-
     public void initialize() {
+
         // Генерируйте массивы точек в ServiceTwo и передавайте их контроллеру
         List<List<Double>> doubless;
         try {
@@ -40,8 +38,8 @@ public class HelloController {
             throw new RuntimeException(e);
         }
 
-        am1Points = doubless.get(0);
-        am2Points = doubless.get(1);
+        List<Double> am1Points = doubless.get(0);
+        List<Double> am2Points = doubless.get(1);
 
         // Определите оси X и Y для графика
         xAxis = new NumberAxis();
@@ -69,6 +67,7 @@ public class HelloController {
         // Добавьте график на холст
         container.getChildren().add(lineChart);
     }
+
 
 //    public void setAm1Points(List<Double> am1Points) {
 //        this.am1Points = am1Points;
