@@ -8,7 +8,7 @@ import java.util.List;
 public class ServiceFromGPT {
     static List<Double> am1Points = new ArrayList<>();
     static List<Double> am2Points = new ArrayList<>();
-    public static void main(String[] args) throws IOException {
+    public static List<List<Double>> points() throws IOException {
 
         final int Nx = 10;
         final int Ny = 10; // 21
@@ -186,7 +186,11 @@ public class ServiceFromGPT {
             am1Points.add(am1);
             am2Points.add(am2);
         }
+        List<List<Double>> result = new ArrayList<>();
+        result.add(am1Points);
+        result.add(am2Points);
 
         f2.close();
+        return result;
     }
 }

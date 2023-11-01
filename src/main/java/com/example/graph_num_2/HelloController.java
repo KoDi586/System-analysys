@@ -1,6 +1,6 @@
 package com.example.graph_num_2;
 
-import fromPershinThird.ServiceTwo;
+import fromPershinThird.ServiceFromGPT;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -11,6 +11,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.util.List;
 
 public class HelloController {
@@ -32,9 +33,15 @@ public class HelloController {
 
     public void initialize() {
         // Генерируйте массивы точек в ServiceTwo и передавайте их контроллеру
-        ServiceTwo.main(new String[0]);
-        am1Points = ServiceTwo.getAm1Points();
-        am2Points = ServiceTwo.getAm2Points();
+        List<List<Double>> doubless;
+        try {
+            doubless = ServiceFromGPT.points();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        am1Points = doubless.get(0);
+        am2Points = doubless.get(1);
 
         // Определите оси X и Y для графика
         xAxis = new NumberAxis();
@@ -63,11 +70,11 @@ public class HelloController {
         container.getChildren().add(lineChart);
     }
 
-    public void setAm1Points(List<Double> am1Points) {
-        this.am1Points = am1Points;
-    }
-
-    public void setAm2Points(List<Double> am2Points) {
-        this.am2Points = am2Points;
-    }
+//    public void setAm1Points(List<Double> am1Points) {
+//        this.am1Points = am1Points;
+//    }
+//
+//    public void setAm2Points(List<Double> am2Points) {
+//        this.am2Points = am2Points;
+//    }
 }
