@@ -1,12 +1,12 @@
-package fromPershinThird;
+package regular;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceFromGPT {
-    static List<Double> am1Points = new ArrayList<>();
+public class ServiceReg {
+    static List<Double> pltlist = new ArrayList<>();
     static List<Double> am2Points = new ArrayList<>();
     public static List<List<Double>> points() throws IOException {
 
@@ -18,7 +18,7 @@ public class ServiceFromGPT {
         double[][][] dT2 = new double[Nx][Ny][Nz];
         double[][][] T2 = new double[Nx][Ny][Nz];
         double[][][] TK = new double[Nx][Ny][Nz];
-        double[] Tek = new double[Nz];
+        double[][][] Tek = new double[Nx][Ny][Nz];
         double[] Zs1 = new double[Nz];
 
         double time = 0, tmin = 0;
@@ -31,35 +31,36 @@ public class ServiceFromGPT {
         double wc1, wc3, mg1, mg3, dd, dw, wcm1, wcm3, k, ee4, dww, G, fr, Mor, Mo, fp, dfaz, am1 = 0, am2=0;
         double Pee4, Pe4, Pee2, pe2, ee2, wvv, mra, a3, ind2, ind4, indsr, indd, wk2, wk4, Snag, b1, b2, b3;
         double Tkk, Si2, Lk, KY, Q, Q1, n, vF = 0, asr, E1, E2, E4, S4, sum, r1, raz, Tza, NB, KT;
+        double usilitel,delta_H;
         FileWriter f2;
 
-        NB = 21;
-        // Верхний пласт
-        ax = 150.4 / 86400;
-        ay = 34.64 / 86400;
-        az = 24.64 / 86400;
+        NB = 9;
+        // Верхний пласт, физические параметры, даны изначально
+        ax = 148.4 / 86400;
+        ay = 24.64 / 86400;
+        az = 14.64 / 86400;
         n = 0.000128;
 
         // Нижний пласт
-        ax1 = 150.4 / 86400;
-        ay1 = 34.64 / 86400;
-        az1 = 24.64 / 86400;
+        ax1 = 148.4 / 86400;
+        ay1 = 0.5 * 14.64 / 86400;
+        az1 = 0.27 * 14.64 / 86400;
         n1 = 0.00012;
-        b1 = 0.0132 / 86400;
+        b1 = 0.000012 / 86400;
 
         // Геометрия
         Lx = 2100;
         Ly = 2200;
-        Lz1 = 12;
-        Lz2 = 22;
+        Lz1 = 20 + 5 * NB;
+        Lz2 = 22 + 5 * NB;
 
         // Расположение скважин в пласте
         Zs1 = new double[Nz];
         for (z = 0; z < Nz; z++) {
             Zs1[z] = 0;
         }
-        Xs1 = 5;
-        Ys1 = 5;
+        Xs1 = 4;
+        Ys1 = 4;
         Nz1 = 2;
         Nz2 = Nz - 1;
         for (z = Nz1; z <= Nz2; z++) {
@@ -67,7 +68,7 @@ public class ServiceFromGPT {
         }
         double K1 = 0.02 + 0.1 * NB;
 
-        f2 = new FileWriter("C:\\Users\\hirof\\OneDrive\\Рабочий стол\\rez.txt");
+        f2 = new FileWriter("C:\\Users\\hirof\\IdeaProjects\\Graph_num_2(1)\\rez.txt");
 
         f2.write("*** Вариант**** " + NB + "\n");
         dx = Lx / (Nx - 1);
@@ -116,14 +117,24 @@ public class ServiceFromGPT {
 
         // Input
         Q1 = -100;
-        Kkor = 1.91;  // для корректировки
+        Kkor = 1.91 * (0.3358 / 0.18); // Подбирать Kkor так, чтобы # 0.18 - K1  // для корректировки
         f2.write(" Kkor  " + Kkor + "\n");
 
         // Временные циклы
         time = 0;
-        iv = 50;
-        tau = 100;
+        iv = 1000;
+        tau = 172;
         dtau = 1;
+
+        double Kp = 1.02964374498184;
+        double Ti = 1 / 241.629736057393;
+        double Td = 0.256167689129989;  // Получил из программы СПИДР
+
+        double regular = 0;
+        double s = 0;
+        double d = 0;
+        am2 = 0;
+
 
         // Гидролитосферные процессы
         for (tt = 1; tt <= tau; tt++) {
@@ -131,33 +142,45 @@ public class ServiceFromGPT {
                 time += dtau;
                 wvv = time / 3600;
 
-                // В.валанжин
+                // Валанжины
                 for (x = 1; x < Nx - 1; x++) {
                     for (y = 1; y < Ny - 1; y++) {
                         for (z = 1; z < Nz - 1; z++) {
+                            //верхний
                             dT1[x][y][z] = (1 / n) * dtau * (ax * (T1[x - 1][y][z] - 2 * T1[x][y][z] + T1[x + 1][y][z]) / (dx * dx)
-                                    + ay * (T1[x][y - 1][z] - 2 * T1[x][y][z] + T1[x][y + 1][z]) / (dy * dy)
-                                    + az * (T1[x][y][z - 1] - 2 * T1[x][y][z] + T1[x][y][z + 1]) / (dz1 * dz1));
+                                                           + ay * (T1[x][y - 1][z] - 2 * T1[x][y][z] + T1[x][y + 1][z]) / (dy * dy)
+                                                           + az * (T1[x][y][z - 1] - 2 * T1[x][y][z] + T1[x][y][z + 1]) / (dz1 * dz1));
+
+                            //нижний
+                            del = 0;
+                            if (x == Xs1 && y == Ys1) {
+                                del = 1;
+                            }
+                            dT2[x][y][z] = ((1 / n1) * dtau * (ax1 * (T2[x - 1][y][z] - 2 * T2[x][y][z] + T2[x + 1][y][z]) / (dx * dx)
+                                                            + ay1 * (T2[x][y - 1][z] - 2 * T2[x][y][z] + T2[x][y + 1][z]) / (dy * dy)
+                                                            + az1 * (T2[x][y][z - 1] - 2 * T2[x][y][z] + T2[x][y][z + 1]) / (dz2 * dz2))
+                                                            + ((-regular) / (Nz - 2)) * Kkor * del * dtau);
                         }
                     }
                 }
 
                 // Н. валанжин
-                for (x = 1; x < Nx - 1; x++) {
-                    for (y = 1; y < Ny - 1; y++) {
-                        for (z = 1; z < Nz - 1; z++) {
-                            del = 0;
-                            if (x == Xs1 && y == Ys1) {
-                                del = 1;
-                            }
-                            dT2[x][y][z] = (1 / n1) * dtau * (ax1 * (T2[x - 1][y][z] - 2 * T2[x][y][z] + T2[x + 1][y][z]) / (dx * dx)
-                                    + ay1 * (T2[x][y - 1][z] - 2 * T2[x][y][z] + T2[x][y + 1][z]) / (dy * dy)
-                                    + az1 * (T2[x][y][z - 1] - 2 * T2[x][y][z] + T2[x][y][z + 1]) / (dz2 * dz2))
-                                    + (Q1 / (3600 * 24)) / (Nz - 2) * Kkor * del * dtau;
-                        }
-                    }
-                }
+//                for (x = 1; x < Nx - 1; x++) {
+//                    for (y = 1; y < Ny - 1; y++) {
+//                        for (z = 1; z < Nz - 1; z++) {
+//                            del = 0;
+//                            if (x == Xs1 && y == Ys1) {
+//                                del = 1;
+//                            }
+//                            dT2[x][y][z] = (1 / n1) * dtau * (ax1 * (T2[x - 1][y][z] - 2 * T2[x][y][z] + T2[x + 1][y][z]) / (dx * dx)
+//                                    + ay1 * (T2[x][y - 1][z] - 2 * T2[x][y][z] + T2[x][y + 1][z]) / (dy * dy)
+//                                    + az1 * (T2[x][y][z - 1] - 2 * T2[x][y][z] + T2[x][y][z + 1]) / (dz2 * dz2))
+//                                    + (-regular / (Nz - 2)) * Kkor * del * dtau;        // если разомкнутая система regular = Q = 100 / 86400
+//                        }
+//                    }
+//                }
 
+                //Формирование условий для следующего цикла
                 for (x = 1; x < Nx - 1; x++) {
                     for (y = 1; y < Ny - 1; y++) {
                         for (z = 1; z < Nz - 1; z++) {
@@ -168,37 +191,60 @@ public class ServiceFromGPT {
                 }
 
                 // Граничные условия
-                for (x = 0; x < Nx - 1; x++) {
-                    for (y = 0; y < Ny - 1; y++) {
-                        T2[x][y][Nz-1] = T2[x][y][Nz - 2];
+//                for (x = 0; x < Nx - 1; x++) {
+//                    for (y = 0; y < Ny - 1; y++) {
+//                        T2[x][y][Nz-1] = T2[x][y][Nz - 2];
+//                    }
+//                }
+
+                // Граничные условия при переходе из среды в среду
+                for (x = 2; x < Nx - 1; x++) {
+                    for (y = 2; y < Ny - 1; y++) {
+//                        T1[x][y][Nz-1] = T1[x][y][Nz-1] + b1 * dtau * (T2[x][y][1] - T1[x][y][Nz-1]);
+                        T1[x][y][7] = T1[x][y][7] + b1 * dtau * (T2[x][y][1] - T1[x][y][7]);
+                        T2[x][y][1] = T2[x][y][1] - b1 * dtau * (T2[x][y][1] - T1[x][y][7]);
+//                        T2[x][y][1] = T2[x][y][1] - b1 * dtau * (T2[x][y][1] - T1[x][y][Nz-1]);
                     }
                 }
 
-                // Граничные условия при переходе из среды в среду
-                for (x = 1; x < Nx - 1; x++) {
-                    for (y = 1; y < Ny - 1; y++) {
-                        T1[x][y][Nz-1] = T1[x][y][Nz-1] + b1 * dtau * (T2[x][y][1] - T1[x][y][Nz-1]);
-                        T2[x][y][1] = T2[x][y][1] - b1 * dtau * (T2[x][y][1] - T1[x][y][Nz-1]);
+                // Регулятор
+                delta_H = am2;
+                usilitel = Kp * delta_H;
+                s = (s + (1 / Ti) * delta_H);
+                dd = (delta_H - d) * Td;
+                d = delta_H;
+
+                regular = usilitel;  // + s + dd
+
+                am2 = T2[Xs1][Ys1][5] - TK[Xs1][Ys1][5];
+
+                // Сохранение точек для построения графика
+
+                am2Points.add(am2);
+
+            }
+
+
+            for (x = 1; x < Nx - 1; x++) {
+                for (y = 1; y < Ny - 1; y++) {
+                    for (z = 1; z < Nz - 1; z++) {
+                        Tek[x][y][z] = T2[x][y][z] - TK[x][y][z];
                     }
                 }
             }
-            // Сохранение точек для построения графика
 
-            am1 = (T2[Xs1][Ys1][5] - TK[Xs1][Ys1][5]) / Q1;
-            am2 = T2[Xs1][Ys1][5] - TK[Xs1][Ys1][5];
-
-            am1Points.add(am1);
-            am2Points.add(am2);
+            pltlist.add(Tek[4][4][4]);
 
         }
         List<List<Double>> result = new ArrayList<>();
-
+        result.add(pltlist);
+        result.add(am2Points);
         //почистить от лишнего
 
-        result.add(am1Points);
-        result.add(am2Points);
+
 
         f2.close();
         return result;
     }
 }
+

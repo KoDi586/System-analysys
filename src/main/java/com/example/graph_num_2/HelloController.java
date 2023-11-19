@@ -1,10 +1,7 @@
 package com.example.graph_num_2;
 
-import fromPershinThird.ServiceFromGPT;
+import workingServices.ServiceWithoutR;
 import javafx.fxml.FXML;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
 
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
@@ -31,17 +28,31 @@ public class HelloController {
     @FXML
     private VBox container;
 
+    public List<List<Double>> doubless;
+
     public void initialize() {
         // Генерируйте массивы точек в ServiceTwo и передавайте их контроллеру
+//        List<List<Double>> doubless;
+//        try {
+//            doubless = ServiceFromGPT.points();       // график
+//        } catch (IOException e) {                     //без регулятора
+//            throw new RuntimeException(e);
+//        }
+//
+//        List<Double> am1Points = doubless.get(0);
+//        List<Double> am2Points = doubless.get(1);   //без регулятора
+
+
         List<List<Double>> doubless;
         try {
-            doubless = ServiceFromGPT.points();
-        } catch (IOException e) {
+            doubless = ServiceWithoutR.points();       //график
+        } catch (IOException e) {                 //с регулятором
             throw new RuntimeException(e);
         }
-
         List<Double> am1Points = doubless.get(0);
-        List<Double> am2Points = doubless.get(1);
+        List<Double> am2Points = doubless.get(0);   //с регулятором
+
+
 
         // Определите оси X и Y для графиков
         xAxis1 = new NumberAxis();

@@ -1,4 +1,4 @@
-package fromPershinThird;
+package ServiceWithoutRegular;
 
 import java.util.ArrayList;
 import java.util.List;
