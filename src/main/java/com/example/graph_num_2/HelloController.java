@@ -34,21 +34,21 @@ public class HelloController {
     public void initialize() {
         // Генерируйте массивы точек в ServiceTwo и передавайте их контроллеру
 
-        List<List<Double>> doubless;
-        try {
-            doubless = ServiceWithoutR.points();       //график
-        } catch (IOException e) {                 //без регулятора
-            throw new RuntimeException(e);
-        }
-        List<Double> am1Points = doubless.get(0);
-
-//        List<List<Double>> doubless;
+       // List<List<Double>> doubless;
 //        try {
-//            doubless = ServiceRegular.points();       //график
-//        } catch (IOException e) {                 //с регулятором
+//            doubless = ServiceWithoutR.points();       //график
+//        } catch (IOException e) {                 //без регулятора
 //            throw new RuntimeException(e);
 //        }
 //        List<Double> am1Points = doubless.get(0);
+//
+        List<List<Double>> doubless;
+        try {
+            doubless = ServiceRegular.points();       //график
+        } catch (IOException e) {                 //с регулятором
+            throw new RuntimeException(e);
+        }
+        List<Double> am1Points = doubless.get(0);
 
 
         // Определите оси X и Y для графиков
