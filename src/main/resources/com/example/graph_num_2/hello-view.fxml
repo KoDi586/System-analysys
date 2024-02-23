@@ -3,15 +3,15 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.canvas.Canvas?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.graph_num_2.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello_button!" onAction="#onHelloButtonClick"/>
-    <Canvas fx:id="canvas" width="320" height="240"/>
+<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.graph_num_2.HelloController" fx:id="container">
+    <!--    <padding>-->
+    <!--        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>-->
+    <!--    </padding>-->
+
+
 </VBox>
