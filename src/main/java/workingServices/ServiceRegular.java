@@ -71,13 +71,13 @@ public class ServiceRegular {
 
         // Временные циклы
         time = 0;
-        iv = 1000;
-        tau = 100;
+        iv = 100;
+        tau = 300;
         dtau = 1;
 
-        double Kp = 1.02964374498184;
-        double Ti = 1 / 241.629736057393;
-        double Td = 0.256167689129989;  // Получил из программы СПИДР
+        double Kp = 0.347182781095744;
+        double Ti = 1 / 109.988627308538;
+        double Td = 0.132575763664182;  // Получил из программы СПИДР
 
         List<Double> pltlist = new ArrayList<>();
 
